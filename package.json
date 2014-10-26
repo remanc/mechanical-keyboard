@@ -1,12 +1,12 @@
 {
   "name": "mechanical-keyboard",
   "main": "./lib/mechanical-keyboard",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Atom package to make mechanical keyboard noises while you type",
   "activationEvents": [
     "mechanical-keyboard:toggle"
   ],
-  "repository": "https://github.com/atom/mechanical-keyboard",
+  "repository": "https://github.com/remanc/mechanical-keyboard",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"
