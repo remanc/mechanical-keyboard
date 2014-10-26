@@ -1,8 +1,8 @@
 {
   "name": "mechanical-keyboard",
   "main": "./lib/mechanical-keyboard",
-  "version": "0.0.0",
-  "description": "A short description of your package",
+  "version": "0.0.1",
+  "description": "Atom package to make mechanical keyboard noises while you type",
   "activationEvents": [
     "mechanical-keyboard:toggle"
   ],
