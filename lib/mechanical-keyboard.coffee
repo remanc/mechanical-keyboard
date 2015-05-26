@@ -6,10 +6,12 @@ module.exports =
   keyboardListeners: null
 
   activate: (state) ->
-    atom.workspaceView.command 'mechanical-keyboard:toggle', => @toggle()
+    atom.commands.add 'atom-workspace','mechanical-keyboard:toggle', => @toggle()
     @keyboardListeners = [];
-    atom.workspaceView.eachEditorView (editorView) =>
-      @keyboardListeners.push new KeyboardListener editorView
+    that = @;
+    atom.workspace.observeTextEditors(
+      (editor) -> that.keyboardListeners.push new KeyboardListener editor
+    )
 
   toggle: ->
     @toggleState = !@toggleState
