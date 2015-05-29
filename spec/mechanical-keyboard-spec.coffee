@@ -1,4 +1,3 @@
-{WorkspaceView} = require 'atom'
 MechanicalKeyboard = require '../lib/mechanical-keyboard'
 
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
@@ -8,23 +7,50 @@ MechanicalKeyboard = require '../lib/mechanical-keyboard'
 
 describe "MechanicalKeyboard", ->
   activationPromise = null
+  workspaceView = null
+  defaultEditor = null
 
   beforeEach ->
-    atom.workspaceView = new WorkspaceView
+    workspaceView = atom.views.getView(atom.workspace)
+
     activationPromise = atom.packages.activatePackage('mechanical-keyboard')
 
+    #make a default editor
+    waitsForPromise ->
+      atom.workspace.open()
+    runs ->
+      defaultEditor = atom.workspace.getActiveTextEditor()
+
   describe "when the mechanical-keyboard:toggle event is triggered", ->
-    it "attaches and then detaches the view", ->
-      expect(atom.workspaceView.find('.mechanical-keyboard')).not.toExist()
+    it "attaches and then detaches an editor", ->
+      #create a text editor
+      editorView = atom.views.getView(defaultEditor)
 
-      # This is an activation event, triggering it will cause the package to be
-      # activated.
-      atom.workspaceView.trigger 'mechanical-keyboard:toggle'
-
+      console.log('First test')
       waitsForPromise ->
         activationPromise
-
       runs ->
-        expect(atom.workspaceView.find('.mechanical-keyboard')).toExist()
-        atom.workspaceView.trigger 'mechanical-keyboard:toggle'
-        expect(atom.workspaceView.find('.mechanical-keyboard')).not.toExist()
+        expect(editorView.classList.contains('mechanical-keyboard')).toBe(false)
+        atom.commands.dispatch workspaceView, 'mechanical-keyboard:toggle'
+        expect(editorView.classList.contains('mechanical-keyboard')).toBe(true)
+        atom.commands.dispatch workspaceView, 'mechanical-keyboard:toggle'
+
+    it "auto attaches to newly created editors", ->
+      
+      waitsForPromise ->
+        activationPromise
+      runs ->
+        waitsForPromise ->
+          atom.workspace.open()
+        runs ->
+          editors = atom.workspace.getTextEditors()
+          #verify that all editors are listening to keyboard
+          for editor in editors
+            editorView = atom.views.getView(editor)
+            expect(editorView.classList.contains('mechanical-keyboard')).toBe(false)
+
+          atom.commands.dispatch workspaceView, 'mechanical-keyboard:toggle'
+          for editor in editors
+            editorView = atom.views.getView(editor)
+            expect(editorView.classList.contains('mechanical-keyboard')).toBe(true)
+          atom.commands.dispatch workspaceView, 'mechanical-keyboard:toggle'
