@@ -15,7 +15,9 @@ class KeyboardListener
   constructor: (editor) ->
     @editorView = atom.views.getView(editor)
 
-  subscribe: ->    
+  subscribe: ->
+    #Add a class so it's easy to test, because you can't list down the listeners
+    @editorView.classList.add 'mechanical-keyboard'
     @editorView.addEventListener 'keydown', (e) ->
       keySound = switch e.which
         when keyCode.DELETE then deleteKey
@@ -24,4 +26,5 @@ class KeyboardListener
       keySound.play()
 
   unsubscribe: ->
+    @editorView.classList.remove 'mechanical-keyboard'
     @editorView.removeEventListener 'keydown'
