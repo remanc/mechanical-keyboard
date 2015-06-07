@@ -1,3 +1,7 @@
+## Forked from https://github.com/remanc/mechanical-keyboard
+
+Hosting here until the fork is merged
+
 # mechanical-keyboard package
 
 Coworkers complaining that your [cherry blues](http://deskthority.net/wiki/Cherry_MX_Blue) are too loud? Or maybe you're just curious what all the hype is about?
