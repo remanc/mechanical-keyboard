@@ -6,17 +6,23 @@ module.exports =
   keyboardListeners: null
 
   activate: (state) ->
-    atom.workspaceView.command 'mechanical-keyboard:toggle', => @toggle()
+    atom.commands.add 'atom-workspace','mechanical-keyboard:toggle', => @toggle()
     @keyboardListeners = [];
-    atom.workspaceView.eachEditorView (editorView) =>
-      @keyboardListeners.push new KeyboardListener editorView
+    that = @; #TODO: how does this work in coffeescript?
+    atom.workspace.observeTextEditors (editor) ->
+      that.keyboardListeners.push new KeyboardListener editor
+      # immediately attach listeners to new editors
+      that.setupListener()
 
-  toggle: ->
-    @toggleState = !@toggleState
+  setupListener: ->
     if @toggleState
       @keyboardListeners.forEach (listener) -> listener.subscribe()
     else
       @keyboardListeners.forEach (listener) -> listener.unsubscribe()
+
+  toggle: ->
+    @toggleState = !@toggleState
+    @setupListener()
 
   deactivate: ->
     # nothing to do here

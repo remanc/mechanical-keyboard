@@ -12,11 +12,13 @@ otherKey = new KeySound('laptop_notebook_return_or_enter_key_press.mp3')
 module.exports =
 class KeyboardListener
 
-  constructor: (editorView) ->
-    @editorView = editorView
-    
+  constructor: (editor) ->
+    @editorView = atom.views.getView(editor)
+
   subscribe: ->
-    @editorView.on 'keydown.mechanicalkeyboard', (e) ->
+    #Add a class so it's easy to test, because you can't list down the listeners
+    @editorView.classList.add 'mechanical-keyboard'
+    @editorView.addEventListener 'keydown', (e) ->
       keySound = switch e.which
         when keyCode.DELETE then deleteKey
         when keyCode.SPACEBAR then spaceBarKey
@@ -24,4 +26,5 @@ class KeyboardListener
       keySound.play()
 
   unsubscribe: ->
-    @editorView.off 'keydown.mechanicalkeyboard'
+    @editorView.classList.remove 'mechanical-keyboard'
+    @editorView.removeEventListener 'keydown'
